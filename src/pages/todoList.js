@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import { Button, ListGroup, ListGroupItem, Form, InputGroup } from 'react-bootstrap';
-import { Trash } from 'react-bootstrap-icons';
+import { Trash, FileEarmarkPlus } from 'react-bootstrap-icons';
 
 function TodoList() {
   const [task, setTask] = useState('');
@@ -54,7 +54,7 @@ function TodoList() {
         onChange={(e) => setTask(e.target.value)}
         placeholder="Add a task..."
       />
-      <Button onClick={addTask}>Add</Button>
+      <Button className='d-flex align-items-center gap-2' onClick={addTask}><FileEarmarkPlus/>Add</Button>
       </InputGroup>
       <h3 className='mt-4'>Tasks</h3>
       <ListGroup>

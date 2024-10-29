@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import { Button, ListGroup, ListGroupItem, Form, InputGroup } from 'react-bootstrap';
-import { Trash } from 'react-bootstrap-icons';
+import { Stars, Trash } from 'react-bootstrap-icons';
 
 function WishesList() {
     const [task, setTask] = useState('');
@@ -54,7 +54,7 @@ function WishesList() {
           onChange={(e) => setTask(e.target.value)}
           placeholder="Add a wish..."
         />
-        <Button onClick={addTask}>Add</Button>
+        <Button className='d-flex align-items-center gap-2' onClick={addTask}><Stars/>Add</Button>
         </InputGroup>
         <h3 className='mt-4'>Wishes</h3>
         <ListGroup>
