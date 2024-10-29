@@ -1,47 +1,48 @@
 import { React, useState, useEffect } from 'react'
 import { Button, ListGroup, ListGroupItem, Form, InputGroup } from 'react-bootstrap';
-import { Trash } from 'react-bootstrap-icons';
+import { PersonAdd, Trash } from 'react-bootstrap-icons';
 
 function GuestList() {
-    const [task, setTask] = useState('');
-    const [tasks, setTasks] = useState([]);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [guests, setGuests] = useState([]);
     const [isEditing, setIsEditing] = useState(null);
-    const [editText, setEditText] = useState('');
+    const [editName, setEditName] = useState('');
+    const [editEmail, setEditEmail] = useState('');
   
     useEffect(() => {
-      const storedTasks = JSON.parse(localStorage.getItem('invites'));
-      if (storedTasks) setTasks(storedTasks);
+      const storedGuests = JSON.parse(localStorage.getItem('guests'));
+      if (storedGuests) setGuests(storedGuests);
     }, []);
   
     useEffect(() => {
-      localStorage.setItem('invites', JSON.stringify(tasks));
-    }, [tasks]);
+      localStorage.setItem('guests', JSON.stringify(guests));
+    }, [guests]);
   
-    const addTask = () => {
-      if (task.trim()) {
-        setTasks([...tasks, {uniqueId: tasks.length > 0 ? [...tasks].reverse()[0].uniqueId + 1 : 0, text: task, completed: false}]);
-        setTask('');
+    const addGuest = () => {
+      if (name.trim() && email.trim()) {
+        setGuests([...guests, {uniqueId: guests.length > 0 ? [...guests].reverse()[0].uniqueId + 1 : 0, name: name, email: email}]);
+        setName('');
+        setEmail('');
       }
     };
   
-    const toggleComplete = (id) => {
-      setTasks(tasks.map((task) => task.uniqueId === id ? { ...task, completed: !task.completed } : task));
-    };
-  
-    const removeTask = (id) => {
-      setTasks(tasks.filter((task) => task.uniqueId !== id));
+    const removeGuest = (id) => {
+      setGuests(guests.filter((guest) => guest.uniqueId !== id));
     };
   
     const startEditing = (id) => {
       setIsEditing(id);
-      setEditText(tasks.filter((task) => task.uniqueId === id)[0].text);
+      setEditName(guests.filter((guest) => guest.uniqueId === id)[0].name);
+      setEditEmail(guests.filter((guest) => guest.uniqueId === id)[0].email);
     };
   
     const confirmEdit = (id) => {
-      const updatedTasks = tasks.map((task, i) => (task.uniqueId === id ? { ...task, text: editText } : task));
-      setTasks(updatedTasks);
+      const updatedGuests = guests.map((guest, i) => (guest.uniqueId === id ? { ...guest, name: editName, email: editEmail} : guest));
+      setGuests(updatedGuests);
       setIsEditing(null);
-      setEditText('');
+      setEditName('');
+      setEditEmail('');
     };
   
     return (
@@ -50,36 +51,47 @@ function GuestList() {
         <InputGroup>
         <Form.Control
           type="text"
-          value={task}
-          onChange={(e) => setTask(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder="Add guest name"
         />
-        <Button onClick={addTask}>Add</Button>
+        <Form.Control
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Add guest email"
+        />
+        <Button className='d-flex align-items-center gap-2' onClick={addGuest}><PersonAdd/> Add</Button>
         </InputGroup>
         <h3 className='mt-4'>Guests</h3>
-        <ListGroup>
-          {tasks.filter(task => !task.completed).map((task, index) => (
-            <ListGroupItem className='d-flex align-items-center' action={isEditing === task.uniqueId ? false : true} onDoubleClick={() => startEditing(task.uniqueId)} key={task.uniqueId}>
-              <Form.Check 
-                type="checkbox" 
-                checked={task.completed} 
-                onChange={() => toggleComplete(task.uniqueId)} 
-                className="me-3"
-              />
-              {isEditing === task.uniqueId ? (
+        <ListGroup numbered>
+          {guests.map((guest, _index) => (
+            <ListGroupItem className='d-flex justify-content-between align-items-start' action={isEditing === guest.uniqueId ? false : true} onDoubleClick={() => startEditing(guest.uniqueId)} key={guest.uniqueId}>
+              {isEditing === guest.uniqueId ? (
                 <>
+                  <InputGroup>
                   <Form.Control
                     type="text"
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
                     className='flex-grow-1'
                   />
-                  <Button className='ms-3' variant='outline-success' onClick={() => confirmEdit(task.uniqueId)}>Salvar</Button>
+                  <Form.Control
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    className='flex-grow-1'
+                  />
+                  </InputGroup>
+                  <Button className='ms-3' variant='outline-success' onClick={() => confirmEdit(guest.uniqueId)}>Salvar</Button>
                 </>
               ) : (
                 <>
-                  <span className='flex-grow-1'>{task.text}</span>
-                  <Button variant='outline-danger' onClick={() => removeTask(task.uniqueId)}>
+                  <div className='flex-grow-1 ms-3'>
+                    <p className='fw-bold'>{guest.name}</p>
+                    <span>{guest.email}</span>
+                  </div>
+                  <Button variant='outline-danger' onClick={() => removeGuest(guest.uniqueId)}>
                     <Trash/>
                   </Button>
                 </>
