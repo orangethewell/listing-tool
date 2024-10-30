@@ -9,18 +9,27 @@ function GuestList() {
     const [isEditing, setIsEditing] = useState(null);
     const [editName, setEditName] = useState('');
     const [editEmail, setEditEmail] = useState('');
-    const [subject, setSubject] = useState('Invite for my party!');
-    const [content, setContent] = useState('You are invited to my party that will happen at 18:00pm on some location...');
+    const [subject, setSubject] = useState('');
+    const [content, setContent] = useState('');
     const [showWarning, setShowWarning] = useState('');
   
     useEffect(() => {
       const storedGuests = JSON.parse(localStorage.getItem('guests'));
+      const storedMessage = JSON.parse(localStorage.getItem('mail_message'))
       if (storedGuests) setGuests(storedGuests);
+      if (storedMessage) {
+        setSubject(storedMessage[0]); 
+        setContent(storedMessage[1])
+      }
     }, []);
   
     useEffect(() => {
       localStorage.setItem('guests', JSON.stringify(guests));
     }, [guests]);
+
+    useEffect(() => {
+      localStorage.setItem('mail_message', JSON.stringify([subject, content]));
+    }, [subject, content]);
   
     const addGuest = () => {
       if (name.trim() && email.trim()) {
@@ -62,11 +71,17 @@ function GuestList() {
       e.preventDefault();
       
       setGuests([]);
+      setContent("");
+      setSubject("");
     };
 
     return (
       <div>
-        <h1 className='d-flex justify-content-center my-5'>Guest List</h1>
+        <h1 className='d-flex justify-content-center mt-5 mb-3'>Guest List</h1>
+        <p className='m-auto col-md-5 text-center mb-4'>
+          Why you don't make up a party, huh? There's a lot of people out there 
+          willing to party somewhere, add them to your list to send them a invite!
+        </p>
         <InputGroup>
         <Form.Control
           type="text"
@@ -145,7 +160,7 @@ function GuestList() {
               ) : undefined}
               <FormGroup className='d-flex gap-5'>
               <Button disabled={guests.length === 0} onClick={handleSendToAll} className='w-100 mt-4 d-flex align-items-center justify-content-center gap-2' variant='outline-primary' type='submit'><EnvelopeArrowUp/> Send to all</Button>
-              <Button disabled={guests.length === 0} onClick={handleDeleteAll} className='w-100 mt-4 d-flex align-items-center justify-content-center gap-2' variant='danger' type='submit'><Trash/> Delete List</Button>
+              <Button disabled={guests.length === 0} onClick={handleDeleteAll} className='w-100 mt-4 d-flex align-items-center justify-content-center gap-2' variant='danger' type='submit'><Trash/> Delete Content</Button>
               </FormGroup>
               {guests.length === 0 ? (
                 <>

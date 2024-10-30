@@ -46,7 +46,16 @@ function TodoList() {
 
   return (
     <div>
-      <h1 className='d-flex justify-content-center my-5'>To-do List</h1>
+      <h1 className='d-flex justify-content-center mt-5 mb-3'>To-do List</h1>
+      <p className='m-auto col-md-5 text-center mb-4'>
+        Create your list of to-dos here, to-do lists are a excelent tool for managing
+        work and tasks, don't worry about saving it! Our system will save it at 
+        <code> localStorage</code> API in your browser. Yeah, I know you can't carry 
+        it portable to another device but... I don't think you gonna need it, don't
+        you? Oh... Don't worry, I will put a todo there to remind me of this.
+        <br/>
+        <code>TODO: create a export button</code>
+      </p>
       <InputGroup>
       <Form.Control
         type="text"

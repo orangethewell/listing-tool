@@ -46,7 +46,12 @@ function WishesList() {
   
     return (
       <div>
-        <h1 className='d-flex justify-content-center my-5'>Wish List</h1>
+        <h1 className='d-flex justify-content-center mt-5 mb-3'>Wish List</h1>
+        <p className='m-auto col-md-5 text-center mb-4'><i>
+          Have you ever had a dream that you, um, you had, your, you- you could, 
+          you’ll do, you- you wants, you, you could do so, you- you’ll do, you could- 
+          you, you want, you want them to do you so much you could do anything?
+        </i></p>
         <InputGroup>
         <Form.Control
           type="text"
