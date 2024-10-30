@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
-import { Button, ListGroup, ListGroupItem, Form, InputGroup, Alert } from 'react-bootstrap';
-import { PersonAdd, Trash } from 'react-bootstrap-icons';
+import { Button, ListGroup, ListGroupItem, Form, InputGroup, Alert, FormGroup } from 'react-bootstrap';
+import { EnvelopeArrowUp, Mailbox, PersonAdd, Trash, Trash2 } from 'react-bootstrap-icons';
 
 function GuestList() {
     const [name, setName] = useState('');
@@ -49,14 +49,19 @@ function GuestList() {
     };
   
     const handleSendToAll = (e) => {
-      e.preventDefault(); // evita o reload da página
+      e.preventDefault();
       
       const allEmails = guests.map(guest => guest.email).join(',');
       const mailtoLink = `mailto:${allEmails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(content)}`;
   
-      // Abre o link no cliente de e-mail padrão
       window.location.href = mailtoLink;
       setTimeout(() => setShowWarning(`<>If it not work, copy the link and paste it on your browser: <code>${mailtoLink}</code></>`), 5000)
+    };
+
+    const handleDeleteAll = (e) => {
+      e.preventDefault();
+      
+      setGuests([]);
     };
 
     return (
@@ -138,7 +143,10 @@ function GuestList() {
                   <Alert className='mt-4' key="warning" variant='warning'><span dangerouslySetInnerHTML={{ __html: showWarning}}></span></Alert>
                 </>
               ) : undefined}
-              <Button disabled={guests.length === 0} onClick={handleSendToAll} className='w-100 mt-4' variant='outline-primary' type='submit'>Send to all</Button>
+              <FormGroup className='d-flex gap-5'>
+              <Button disabled={guests.length === 0} onClick={handleSendToAll} className='w-100 mt-4 d-flex align-items-center justify-content-center gap-2' variant='outline-primary' type='submit'><EnvelopeArrowUp/> Send to all</Button>
+              <Button disabled={guests.length === 0} onClick={handleDeleteAll} className='w-100 mt-4 d-flex align-items-center justify-content-center gap-2' variant='danger' type='submit'><Trash/> Delete List</Button>
+              </FormGroup>
               {guests.length === 0 ? (
                 <>
                   <Alert className='mt-4 d-flex align-items-center' key="info" variant='info'><PersonAdd className='mx-3' size={32}/> Add some guests to your list to send the invite for your event</Alert>
