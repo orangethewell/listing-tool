@@ -104,6 +104,9 @@ function TodoList() {
           </ListGroupItem>
         ))}
       </ListGroup>
+      <footer class="pt-5 my-5 text-body-secondary border-top">
+          Created by <a target="_blank" href="https://github.com/orangethewell">Orangethewell</a> · © 2024
+      </footer>
     </div>
   );
 }
