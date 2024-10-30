@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react'
-import { Button, ListGroup, ListGroupItem, Form, InputGroup } from 'react-bootstrap';
+import { Button, ListGroup, ListGroupItem, Form, InputGroup, Alert } from 'react-bootstrap';
 import { PersonAdd, Trash } from 'react-bootstrap-icons';
 
 function GuestList() {
@@ -9,6 +9,9 @@ function GuestList() {
     const [isEditing, setIsEditing] = useState(null);
     const [editName, setEditName] = useState('');
     const [editEmail, setEditEmail] = useState('');
+    const [subject, setSubject] = useState('Invite for my party!');
+    const [content, setContent] = useState('You are invited to my party that will happen at 18:00pm on some location...');
+    const [showWarning, setShowWarning] = useState('');
   
     useEffect(() => {
       const storedGuests = JSON.parse(localStorage.getItem('guests'));
@@ -45,6 +48,17 @@ function GuestList() {
       setEditEmail('');
     };
   
+    const handleSendToAll = (e) => {
+      e.preventDefault(); // evita o reload da página
+      
+      const allEmails = guests.map(guest => guest.email).join(',');
+      const mailtoLink = `mailto:${allEmails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(content)}`;
+  
+      // Abre o link no cliente de e-mail padrão
+      window.location.href = mailtoLink;
+      setTimeout(() => setShowWarning(`<>If it not work, copy the link and paste it on your browser: <code>${mailtoLink}</code></>`), 5000)
+    };
+
     return (
       <div>
         <h1 className='d-flex justify-content-center my-5'>Guest List</h1>
@@ -99,6 +113,38 @@ function GuestList() {
             </ListGroupItem>
           ))}
         </ListGroup>
+        <div class="col-md-10 mx-auto">
+          <Form className='p4 p-md-5'>
+            {/* customize the body and the subject from email in a form and send for everyone */}
+            <Form.Group className='mb-3'>
+              <Form.Label>Subject</Form.Label>
+              <Form.Control 
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder='Invite for my party!' />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Content</Form.Label>
+              <Form.Control 
+                as='textarea' 
+                rows={3} 
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder='You are invited to my party that will happen at 18:00pm on some location...' />
+            </Form.Group>
+            <Form.Group>
+              {showWarning.trim() ? (
+                <>
+                  <Alert key="warning" variant='warning'><span dangerouslySetInnerHTML={{ __html: showWarning}}></span></Alert>
+                </>
+              ) : undefined}
+              <Button onClick={handleSendToAll} className='w-100 mt-4' variant='outline-primary' type='submit'>Send to all</Button>
+            </Form.Group>
+          </Form>
+        </div>
+        <footer class="pt-5 my-5 text-body-secondary border-top">
+          Created by <a target="_blank" href="https://github.com/orangethewell">Orangethewell</a> · © 2024
+        </footer>
       </div>
     );
   }
