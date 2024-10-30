@@ -77,7 +77,7 @@ function GuestList() {
         />
         <Button className='d-flex align-items-center gap-2' onClick={addGuest}><PersonAdd/> Add</Button>
         </InputGroup>
-        <h3 className='mt-4'>Guests</h3>
+        {guests.length > 0 ? (<h3 className="mt-4">Guests</h3>) : undefined}
         <ListGroup numbered>
           {guests.map((guest, _index) => (
             <ListGroupItem className='d-flex justify-content-between align-items-start' action={isEditing === guest.uniqueId ? false : true} onDoubleClick={() => startEditing(guest.uniqueId)} key={guest.uniqueId}>
@@ -135,10 +135,15 @@ function GuestList() {
             <Form.Group>
               {showWarning.trim() ? (
                 <>
-                  <Alert key="warning" variant='warning'><span dangerouslySetInnerHTML={{ __html: showWarning}}></span></Alert>
+                  <Alert className='mt-4' key="warning" variant='warning'><span dangerouslySetInnerHTML={{ __html: showWarning}}></span></Alert>
                 </>
               ) : undefined}
-              <Button onClick={handleSendToAll} className='w-100 mt-4' variant='outline-primary' type='submit'>Send to all</Button>
+              <Button disabled={guests.length === 0} onClick={handleSendToAll} className='w-100 mt-4' variant='outline-primary' type='submit'>Send to all</Button>
+              {guests.length === 0 ? (
+                <>
+                  <Alert className='mt-4 d-flex align-items-center' key="info" variant='info'><PersonAdd className='mx-3' size={32}/> Add some guests to your list to send the invite for your event</Alert>
+                </>
+              ) : undefined}
             </Form.Group>
           </Form>
         </div>

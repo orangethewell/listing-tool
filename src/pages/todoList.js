@@ -56,7 +56,7 @@ function TodoList() {
       />
       <Button className='d-flex align-items-center gap-2' onClick={addTask}><FileEarmarkPlus/>Add</Button>
       </InputGroup>
-      <h3 className='mt-4'>Tasks</h3>
+      {tasks.length > 0 ? (<h3 className="mt-4">Tasks</h3>) : undefined}
       <ListGroup>
         {tasks.filter(task => !task.completed).map((task, index) => (
           <ListGroupItem className='d-flex align-items-center' action={isEditing === task.uniqueId ? false : true} onDoubleClick={() => startEditing(task.uniqueId)} key={task.uniqueId}>
@@ -87,7 +87,7 @@ function TodoList() {
           </ListGroupItem>
         ))}
       </ListGroup>
-      <h3 className="mt-4">Completed Tasks</h3>
+      {tasks.filter(task => task.completed).length > 0 ? (<h3 className="mt-4">Completed Tasks</h3>) : undefined}
       <ListGroup>
         {tasks.filter(task => task.completed).map((task, index) => (
           <ListGroupItem className='d-flex align-items-center' key={task.uniqueId}>
